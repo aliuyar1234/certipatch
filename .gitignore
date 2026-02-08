@@ -1,0 +1,49 @@
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.venv/
+venv/
+env/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build / artifacts / generated run data
+runs/
+artifacts/
+assets/
+exports/
+session_logs/
+
+# Large bundles and archives
+*.zip
+*.7z
+*.tar
+*.gz
+
+# LaTeX intermediate files
+paper/latex/*.aux
+paper/latex/*.bbl
+paper/latex/*.bcf
+paper/latex/*.blg
+paper/latex/*.fdb_latexmk
+paper/latex/*.fls
+paper/latex/*.log
+paper/latex/*.out
+paper/latex/*.run.xml
+paper/latex/*.synctex.gz
+paper/latex/*.toc
+
+# Keep final paper assets under version control
+!paper/latex/main.pdf
+!paper/latex/figures/*.pdf
+!paper/latex/tables/*.tex
