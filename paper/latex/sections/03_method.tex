@@ -1,0 +1,26 @@
+\section{Method}
+CertiPatch uses a gated low-rank hookpoint patch (GLR-HP) on the residual stream at the answer position.
+For candidate layers $\ell\in\mathcal{L}$:
+\[
+h_{\ell,p} \leftarrow h_{\ell,p} + s(x)\,U_\ell(V_\ell^\top h_{\ell,p}),
+\]
+with rank $r$ and candidate layers determined by configuration.
+
+\paragraph{Constrained minimality.}
+We optimize:
+\[
+\min_{\Delta\phi}\; \mathcal{L}_{\text{collateral}}(\Delta\phi) + \lambda_{\text{reg}}\mathcal{R}(\Delta\phi)
+\quad \text{s.t.}\quad g_{\text{spec}}(\Delta\phi)=0,
+\]
+where $g_{\text{spec}}$ encodes in-scope spec violations.
+The inner solver uses an augmented Lagrangian schedule.
+The outer loop is counterexample-guided and adds hardest violations to the active set each round.
+This CEGIS-style structure is used for closure under discovered failures while keeping the patch sparse and localized.
+
+\paragraph{Collateral objectives.}
+Collateral is measured on dedicated reference suites: short-form Yes/No KL and long-horizon generation drift.
+These suites are gate-aware: in-scope prompts are evaluated as such, and out-of-scope prompts remain excluded by construction.
+The resulting optimization target is explicitly ``repair under collateral budget'', not unconstrained task adaptation.
+
+\paragraph{Compositionality.}
+We train separate patches for two specs and evaluate interference under additive composition and sequential repair (A$\to$B and B$\to$A).

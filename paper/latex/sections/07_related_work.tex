@@ -1,0 +1,14 @@
+\section{Related work}
+\paragraph{Localized editing and PEFT.}
+Targeted model editing methods (e.g., ROME and MEMIT) show that narrow behavioral updates can be achieved without full retraining~\cite{meng2022rome,meng2023memit}.
+Parameter-efficient adaptation methods such as prompt tuning and LoRA similarly motivate small-parameter interventions~\cite{lester2021prompt,hu2022lora}.
+CertiPatch differs in objective: constrained in-scope closure with explicit collateral accounting and verifier replay.
+
+\paragraph{Attribution and debugging signals.}
+Influence-based attribution methods aim to identify training examples that affect model behavior~\cite{koh2017influence,pruthi2020tracin,park2023trak}.
+While useful diagnostically, they do not by themselves provide scope-bounded repair certificates.
+Our work uses this line as context for why replayable artifact semantics are needed in practical repair workflows.
+
+\paragraph{Failure discovery and repair loops.}
+Counterexample generation and iterative refinement are central ideas in adversarial testing and CEGIS-style program synthesis~\cite{ebrahimi2018hotflip,alur2013syntax}.
+CertiPatch adopts this iterative spirit for model repair, but anchors each run in deterministic artifacts and fail-closed verification.

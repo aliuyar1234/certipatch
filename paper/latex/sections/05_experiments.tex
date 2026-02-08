@@ -1,0 +1,62 @@
+\section{Experiments}
+We evaluate three fully enumerable specs and one coverage-bounded spec, together with collateral suites that fire the gate.
+All numbers are from the reduced compute profile (single seed, main-model core runs, dev-model ablations).
+Comparative conclusions are restricted to completed baseline cells.
+
+\paragraph{Core outcomes.}
+CertiPatch reaches zero failures on all enumerable specs: COMPARE-2D ($0/10{,}000$), PARITY-4D ($0/10{,}000$), and BALANCE-PAREN-14 ($0/32{,}767$).
+On COMPARE-6D-STRAT (coverage-bounded), certified pass rate is $86.22\%$ ($68{,}974/80{,}000$), with strongest strata on $S_{\text{eq}}$ and $S_{\text{ext}}$.
+This supports exact closure on enumerable domains and explicit bounded guarantees on the large-domain case.
+
+\paragraph{Baselines (scope-qualified).}
+For COMPARE-2D, only the base baseline cell completed; other baseline cells are explicitly marked not run in this scope and are excluded from comparative claims.
+For PARITY-4D, several methods close feasibility, while collateral differs materially.
+Within this reduced scope, CertiPatch's key differentiator is audited protocol behavior (certificate + fail-closed semantics) and compositionality under constraints.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\linewidth]{figures/fig01_minimality_pareto.pdf}
+\caption{Collateral vs patch complexity on COMPARE-2D and PARITY-4D. Points are annotated by method; infeasible cells show failure counts.}
+\label{fig:minimality_pareto}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\linewidth]{figures/fig02_cegis_trace.pdf}
+\caption{CEGIS dynamics on COMPARE-2D: failures, collateral KL, and patch norm across outer iterations, with OneShot reference lines where available.}
+\label{fig:cegis_trace}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\linewidth]{figures/fig03_coverage_heatmap.pdf}
+\caption{Coverage-bounded certification profile for COMPARE-6D-STRAT: certified failure rates per stratum (with stratum counts).}
+\label{fig:coverage_heatmap}
+\end{figure}
+
+\paragraph{Compositionality.}
+The six-condition suite shows strong order effects.
+Naive additive composition ($A{+}B$) fails to transfer repair for spec $B$ (5003 failures), while sequential repair ($A\!\to\!B$ and $B\!\to\!A$) and joint repair recover zero failures on both specs.
+Patch interaction is therefore non-commutative and must be measured rather than assumed.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\linewidth]{figures/fig04_compositionality_matrix.pdf}
+\caption{Compositionality matrix over six conditions: per-spec failures, collateral metrics, and patch norm.}
+\label{fig:compositionality}
+\end{figure}
+
+\paragraph{Verifier binding checks.}
+We report tamper outcomes over replay-exact and four controlled artifact manipulations (patch weights, generator hash, coverage-plan hash, model revision).
+The checks are evaluated at artifact-binding level to remain stable under later repository edits outside the recorded run scope.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\linewidth]{figures/fig05_verifier_tamper.pdf}
+\caption{Artifact-binding tamper checks: replay exact passes; controlled tamper cases fail.}
+\label{fig:verifier_tamper}
+\end{figure}
+
+\input{tables/tab01_main_results}
+\input{tables/tab02_ablations}
+\FloatBarrier

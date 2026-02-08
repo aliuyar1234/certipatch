@@ -1,0 +1,5 @@
+\section{Problem setup}
+A \emph{spec} defines a deterministic prompt family $X_{\text{spec}}$ and a computable labeler $\mathrm{Spec}(x)\in\{\text{Yes},\text{No}\}$.
+We evaluate the model via a fixed Yes/No decision rule on the answer-token logits.
+A \emph{gate} $s(x)\in\{0,1\}$ defines the certified scope: patches apply only when $s(x)=1$, and collateral metrics are computed only on gate-firing suites.
+For non-enumerable domains, we certify only a deterministic coverage plan and bounded search budgets; out-of-scope behavior is not certified.

@@ -1,0 +1,18 @@
+\section{Introduction}
+Large language models can still fail on deterministic micro-behaviors (e.g., basic comparison or parity) even when they remain useful on broader tasks.
+In this setting, post-hoc repair methods should satisfy three practical requirements:
+(i) repair the targeted behavior reliably, (ii) limit collateral drift on unrelated prompts, and (iii) provide auditable evidence for what was actually fixed.
+
+We study this problem under a frozen-model assumption and focus on inference-time interventions.
+The resulting protocol, CertiPatch, combines constrained optimization with explicit artifact verification, so that reported outcomes are replayable from saved run artifacts.
+This places the method in the overlap between parameter-efficient adaptation methods such as LoRA and prompt tuning~\cite{hu2022lora,lester2021prompt},
+localized model-editing ideas~\cite{meng2022rome,meng2023memit},
+and test-driven repair loops.
+
+\paragraph{Contributions.}
+\begin{itemize}[leftmargin=*,nosep]
+\item \textbf{Train-certify-verify protocol.} We provide an end-to-end repair pipeline that emits certificate artifacts and enforces fail-closed verification.
+\item \textbf{Scope-aware certification.} We report exact certification on enumerable domains and coverage-bounded certification on a large stratified domain.
+\item \textbf{Compositionality evidence.} We evaluate six composition conditions and quantify interference/order effects.
+\item \textbf{Compute-aware claim discipline.} We restrict comparative claims to completed cells and keep the submission single-seed by design.
+\end{itemize}

@@ -1,0 +1,15 @@
+\section{Discussion}
+CertiPatch is designed for scope-bounded, replayable empirical guarantees rather than formal verification.
+The protocol can fail when the patch family cannot express a feasible repair under tight collateral constraints; such cases must be reported fail-closed.
+Scaling to larger models is primarily an engineering problem under the adapter contract and does not change the certificate semantics.
+This submission is single-seed and compute-aware; we therefore do not claim robustness across seeds.
+Baseline coverage is partial in some settings, so comparative claims are limited to completed matrix cells.
+For coverage-bounded domains, certificates are explicitly bounded by the recorded coverage plan and do not imply out-of-scope correctness.
+
+\paragraph{Interpretation of collateral.}
+Collateral is highly task-dependent in this run profile: PARITY-4D achieves near-zero KL and low drift, while COMPARE-2D and BALANCE-PAREN-14 show larger measured drift under the same protocol.
+This suggests that patch complexity alone is insufficient as a quality proxy; certification reports should always include both feasibility and collateral diagnostics.
+
+\paragraph{Practical implication.}
+The strongest claim supported here is operational: practitioners can replay, verify, and audit what was repaired and under which scope assumptions.
+This is a stronger safety posture than reporting isolated task accuracy without certificate semantics.

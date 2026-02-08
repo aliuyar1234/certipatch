@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{times}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{placeins}
+\usepackage[margin=1in]{geometry}
+
+\title{CertiPatch: Minimal-Collateral Specification Repair for Language Models via Counterexample-Guided Hookpoint Patches}
+\author{Anonymous Authors}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study \emph{specification repair} for frozen language models: given a deterministic prompt family and computable Yes/No labels, we seek an inference-time patch that enforces the specification with bounded collateral change.
+We present CertiPatch, a train-certify-verify protocol that learns a gated low-rank hookpoint patch under constrained optimization: minimize collateral drift subject to zero in-scope violations.
+CertiPatch combines a counterexample-guided outer loop with an augmented Lagrangian inner solver and emits replayable empirical certificates with fail-closed verification.
+In a compute-aware single-seed scope, CertiPatch reaches zero failures on three deterministic specs (COMPARE-2D, PARITY-4D, BALANCE-PAREN-14), achieves 86.22\% pass rate on coverage-bounded COMPARE-6D-STRAT, and exposes strong compositionality asymmetries (naive patch addition fails, while sequential and joint repair recover feasibility).
+The resulting claims are intentionally scope-bounded: we provide evidence for protocol semantics, compositional behavior, and verifier integrity, while restricting comparative baseline conclusions to completed cells.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_problem}
+\input{sections/03_method}
+\input{sections/04_certificates}
+\input{sections/05_experiments}
+\input{sections/06_discussion}
+\input{sections/07_related_work}
+\input{sections/08_conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\input{sections/A1_certificate_schema}
+\input{sections/A2_additional_results}
+
+\end{document}

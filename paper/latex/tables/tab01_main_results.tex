@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+Spec & Total & Failures & Pass rate & Min margin & KL$_S$ & Drift$_L$ \\
+\midrule
+COMPARE-2D & 10000 & 0 & 1.000 & 1.00 & 9.694 & 1.000 \\
+PARITY-4D & 10000 & 0 & 1.000 & 1.14 & 0.0017 & 0.125 \\
+BALANCE-PAREN-14 & 32767 & 0 & 1.000 & 1.00 & 7.219 & 1.000 \\
+COMPARE-6D-STRAT & 80000 & 11026 & 0.862 & -10.27 & 12.487 & 1.000 \\
+\bottomrule
+\end{tabular}
+\caption{Main CertiPatch outcomes (reduced scope, seed 0). The first three specs are fully enumerable; COMPARE-6D-STRAT is coverage-bounded.}
+\label{tab:main_runs}
+\end{table}

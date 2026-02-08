@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variant & Failures & Pass rate & KL$_S$ & Drift$_L$ & $\|\Delta\phi\|_F$ & Outer \\
+\midrule
+CertiPatch & 0 & 1.000 & 0.0011 & 0.527 & 7.64 & 7 \\
+no\_minimality & 0 & 1.000 & 0.0011 & 0.527 & 7.64 & 7 \\
+no\_cegis & 0 & 1.000 & 0.0011 & 0.527 & 7.64 & 1 \\
+no\_collateral & 0 & 1.000 & 0.0011 & 0.527 & 7.64 & 7 \\
+no\_gating & 0 & 1.000 & 0.0011 & 0.527 & 7.64 & 7 \\
+rank\_1 & 0 & 1.000 & 0.0011 & 0.527 & 7.64 & 7 \\
+single\_layer & 4849 & 0.515 & 0.0007 & 0.075 & 7.64 & 7 \\
+random\_counterexamples & 0 & 1.000 & 0.0011 & 0.527 & 7.64 & 7 \\
+\bottomrule
+\end{tabular}
+\caption{Dev-model ablations on GPT-2 (COMPARE-2D). In this run set, the single-layer constraint is the only variant that fails to close the spec.}
+\label{tab:ablations}
+\end{table}
