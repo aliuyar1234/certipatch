@@ -1,0 +1,5 @@
+run:
+  run_id: parity4d_certipatch
+
+specs:
+  enabled: ["parity_4d"]

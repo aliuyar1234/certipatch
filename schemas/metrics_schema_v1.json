@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CertiPatch metrics.json schema v1.0 (minimal)",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "spec_metrics",
+    "collateral_metrics"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "1.0"
+      ]
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "spec_metrics": {
+      "type": "object"
+    },
+    "collateral_metrics": {
+      "type": "object"
+    },
+    "cegis_trace": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

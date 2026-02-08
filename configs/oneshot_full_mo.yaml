@@ -1,0 +1,11 @@
+run:
+  run_id: oneshot_full_mo
+
+specs:
+  enabled: ["compare_2d"]
+
+baseline:
+  name: "OneShot-FullDomain-MO"
+  train_on_full_domain: true
+  solver: "multiobjective"
+  alpha_grid: [0.0, 0.01, 0.05, 0.1, 0.2]

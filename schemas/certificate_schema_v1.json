@@ -1,0 +1,544 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CertiPatch certificate.json schema v1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "timestamp_utc",
+    "model",
+    "patch",
+    "specs",
+    "cegis",
+    "objective",
+    "collateral",
+    "reproducibility",
+    "fail_closed"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "1.0"
+      ]
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "model_name",
+        "model_revision",
+        "tokenizer_name",
+        "answer_tokens"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "model_name": {
+          "type": "string"
+        },
+        "model_revision": {
+          "type": "string"
+        },
+        "tokenizer_name": {
+          "type": "string"
+        },
+        "answer_tokens": {
+          "type": "object",
+          "required": [
+            "yes_token",
+            "no_token",
+            "tokenization_mode",
+            "yes_token_id",
+            "no_token_id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "yes_token": {
+              "type": "string"
+            },
+            "no_token": {
+              "type": "string"
+            },
+            "tokenization_mode": {
+              "type": "string"
+            },
+            "yes_token_id": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "no_token_id": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "patch": {
+      "type": "object",
+      "required": [
+        "patch_family",
+        "rank_r",
+        "hookpoint",
+        "candidate_layers",
+        "gate_definition",
+        "patch_parameter_count",
+        "patch_norm_fro",
+        "effective_layers",
+        "patch_weights_hash"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "patch_family": {
+          "type": "string",
+          "enum": [
+            "GLR-HP"
+          ]
+        },
+        "rank_r": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "hookpoint": {
+          "type": "string",
+          "enum": [
+            "resid_post"
+          ]
+        },
+        "candidate_layers": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 1
+        },
+        "gate_definition": {
+          "type": "object",
+          "required": [
+            "gate_name",
+            "gate_predicate_text",
+            "gate_code_hash"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "gate_name": {
+              "type": "string"
+            },
+            "gate_predicate_text": {
+              "type": "string"
+            },
+            "gate_code_hash": {
+              "type": "string"
+            }
+          }
+        },
+        "patch_parameter_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "patch_norm_fro": {
+          "type": "number",
+          "minimum": 0
+        },
+        "effective_layers": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "patch_weights_hash": {
+          "type": "string"
+        }
+      }
+    },
+    "specs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "spec_id",
+          "spec_version",
+          "enumerable",
+          "domain_size",
+          "domain_generator",
+          "labeler_code_hash",
+          "certified_scope",
+          "evaluation"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "spec_id": {
+            "type": "string"
+          },
+          "spec_version": {
+            "type": "string"
+          },
+          "enumerable": {
+            "type": "boolean"
+          },
+          "domain_size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "domain_generator": {
+            "type": "object",
+            "required": [
+              "generator_name",
+              "generator_code_hash"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "generator_name": {
+                "type": "string"
+              },
+              "generator_code_hash": {
+                "type": "string"
+              },
+              "domain_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "coverage_plan_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "labeler_code_hash": {
+            "type": "string"
+          },
+          "certified_scope": {
+            "type": "object",
+            "required": [
+              "scope_type"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "scope_type": {
+                "type": "string",
+                "enum": [
+                  "exact_enumeration",
+                  "coverage_bounded"
+                ]
+              },
+              "coverage_plan_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "evaluation": {
+            "type": "object",
+            "required": [
+              "failures",
+              "pass_rate",
+              "min_margin",
+              "p05_margin"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "failures": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pass_rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "min_margin": {
+                "type": "number"
+              },
+              "p05_margin": {
+                "type": "number"
+              },
+              "strata": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "total",
+                    "failures",
+                    "pass_rate"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "failures": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "pass_rate": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cegis": {
+      "type": "object",
+      "required": [
+        "outer_iterations",
+        "initial_sample_n0",
+        "counterexample_add_k",
+        "counterexample_policy",
+        "counterexample_sets",
+        "search"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "outer_iterations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "initial_sample_n0": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "counterexample_add_k": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "counterexample_policy": {
+          "type": "string"
+        },
+        "counterexample_sets": {
+          "type": "object",
+          "required": [
+            "cex_jsonl_hash",
+            "cex_count_total"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "cex_jsonl_hash": {
+              "type": "string"
+            },
+            "cex_count_total": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "search": {
+          "type": "object",
+          "required": [
+            "search_policies",
+            "search_budgets",
+            "search_seeds"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "search_policies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "search_budgets": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "search_seeds": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "objective": {
+      "type": "object",
+      "required": [
+        "constraint_margin_tau",
+        "collateral_metric",
+        "regularizers",
+        "augmented_lagrangian"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "constraint_margin_tau": {
+          "type": "number"
+        },
+        "collateral_metric": {
+          "type": "string"
+        },
+        "regularizers": {
+          "type": "object",
+          "required": [
+            "lambda_l2",
+            "lambda_group"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "lambda_l2": {
+              "type": "number",
+              "minimum": 0
+            },
+            "lambda_group": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "augmented_lagrangian": {
+          "type": "object",
+          "required": [
+            "mu_init",
+            "mu_mult_on_violation",
+            "mu_div_on_feasible",
+            "inner_steps_per_outer"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "mu_init": {
+              "type": "number",
+              "minimum": 0
+            },
+            "mu_mult_on_violation": {
+              "type": "number",
+              "minimum": 1
+            },
+            "mu_div_on_feasible": {
+              "type": "number",
+              "minimum": 1
+            },
+            "inner_steps_per_outer": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "collateral": {
+      "type": "object",
+      "required": [
+        "ref_suites"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ref_suites": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "suite_id",
+              "suite_hash",
+              "n_prompts"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "suite_id": {
+                "type": "string"
+              },
+              "suite_hash": {
+                "type": "string"
+              },
+              "n_prompts": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "reproducibility": {
+      "type": "object",
+      "required": [
+        "seeds",
+        "determinism_flags",
+        "environment"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "seeds": {
+          "type": "object",
+          "required": [
+            "python",
+            "numpy",
+            "torch"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "python": {
+              "type": "integer"
+            },
+            "numpy": {
+              "type": "integer"
+            },
+            "torch": {
+              "type": "integer"
+            }
+          }
+        },
+        "determinism_flags": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "fail_closed": {
+      "type": "object",
+      "required": [
+        "claims",
+        "verification_tolerances"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "verification_tolerances": {
+          "type": "object",
+          "required": [
+            "max_abs_metric_diff"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "max_abs_metric_diff": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

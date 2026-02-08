@@ -1,0 +1,45 @@
+run:
+  run_id: paper_full
+
+paper:
+  models:
+    dev: openai-community/gpt2
+    main: EleutherAI/pythia-410m-deduped
+    # Keep scaling equal to main to skip extra scaling runs in the default paper profile.
+    scaling: EleutherAI/pythia-410m-deduped
+  seeds: [0]
+  dev_overrides:
+    objective:
+      beta_smooth: 20
+    optimizer:
+      lr: 0.001
+      inner_steps_per_outer: 1200
+      max_inner_rounds: 4
+      patience_steps: 150
+    alm:
+      mu_mult_on_violation: 3.0
+      mu_ceiling: 1.0e8
+      lambda_ceiling: 1.0e8
+
+model:
+  backend: huggingface
+  model_path_or_id: EleutherAI/pythia-410m-deduped
+
+baseline:
+  alpha_grid: [0.0, 0.01, 0.05, 0.1, 0.2]
+  k_virtual_tokens: 32
+  lora_rank: 4
+  lora_target_modules: ["attn.c_proj|attention.dense"]
+  lora_layers: "candidate_layers"
+
+specs:
+  enabled: ["compare_2d", "parity_4d", "balance_paren_14", "compare_6d_strat"]
+
+baselines:
+  enabled: ["base", "steering_vec_1l", "oneshot_full_mo", "oneshot_full_alm", "softprompt", "lora"]
+
+compositionality:
+  enabled: true
+  spec_A: "compare_2d"
+  spec_B: "parity_4d"
+  conditions: ["A_only", "B_only", "A_plus_B", "A_then_B", "B_then_A", "Joint_AB"]

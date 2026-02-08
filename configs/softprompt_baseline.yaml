@@ -1,0 +1,9 @@
+run:
+  run_id: softprompt_baseline
+
+specs:
+  enabled: ["compare_2d"]
+
+baseline:
+  name: "SoftPrompt"
+  k_virtual_tokens: 32

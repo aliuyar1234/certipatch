@@ -1,0 +1,10 @@
+run:
+  run_id: compositionality_suite
+
+specs:
+  enabled: ["compare_2d", "parity_4d"]
+
+compositionality:
+  spec_A: "compare_2d"
+  spec_B: "parity_4d"
+  conditions: ["A_only", "B_only", "A_plus_B", "A_then_B", "B_then_A", "Joint_AB"]

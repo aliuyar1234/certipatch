@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling>=1.20"]
+build-backend = "hatchling.build"
+
+[project]
+name = "certipatch"
+version = "0.1.0"
+description = "CertiPatch SSOT scaffold: minimal-collateral specification repair with replayable empirical certificates."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Anonymous"}]
+
+dependencies = [
+  "pyyaml>=6.0",
+  "numpy>=1.24",
+  "jsonschema>=4.0",
+  "tqdm>=4.0",
+  "rich>=13.0"
+]
+
+[project.optional-dependencies]
+torch = ["torch>=2.1"]
+hf = ["transformers>=4.38", "tokenizers>=0.15"]
+tl = ["transformer-lens>=2.0"]
+viz = ["matplotlib>=3.8", "pandas>=2.0"]
+dev = ["pytest>=7.0", "ruff>=0.4", "mypy>=1.8", "types-jsonschema>=4.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["certipatch"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E203", "E266", "E501"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+incremental = false

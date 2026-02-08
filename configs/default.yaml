@@ -1,0 +1,132 @@
+run:
+  run_id: auto
+  device: cuda
+  dtype: float32
+  deterministic: true
+  seeds:
+    master: 0
+    numpy: 0
+    torch: 0
+
+model:
+  backend: huggingface        # transformer_lens | huggingface
+  model_path_or_id: openai-community/gpt2
+  revision: null              # if null: adapter records resolved revision or local fingerprint
+  tokenizer_path_or_id: null  # if null: defaults to model_path_or_id
+  trust_remote_code: false
+
+answer_tokens:
+  primary:
+    "yes": " Yes"
+    "no": " No"
+  fallback:
+    "yes": " true"
+    "no": " false"
+
+gate:
+  type: boolqa_wrapper_v1
+  enabled: true
+  wrapper_line: "Instruction: Answer with a single token: Yes or No."
+  suffix: "Answer:"
+
+hookpoints:
+  kind: resid_post
+  apply_at: answer_position_last_nonpad
+  candidate_layers:
+    mode: quartiles          # quartiles | explicit
+    explicit: null
+
+patch:
+  family: GLR-HP
+  rank_r: 4
+  effective_layer_threshold: 0.001
+
+objective:
+  tau_margin: 1.0
+  beta_smooth: 50
+  g_smooth_formula: log_mean_exp  # log_mean_exp | logsumexp
+
+regularizers:
+  lambda_l2_grid: [1.0e-05, 1.0e-04, 1.0e-03]
+  lambda_group_grid: [1.0e-04, 1.0e-03, 1.0e-02]
+
+optimizer:
+  lr_grid: [1.0e-03, 3.0e-03, 1.0e-02]
+  adam_betas: [0.9, 0.999]
+  inner_steps_per_outer: 2000
+  max_inner_rounds: 5
+  patience_steps: 200
+  grad_clip_norm: 10.0
+
+alm:
+  mu_init: 1.0
+  mu_mult_on_violation: 10.0
+  mu_div_on_feasible: 2.0
+  mu_floor: 0.001
+  mu_ceiling: 1.0e12
+  lambda_ceiling: 1.0e12
+  non_finite_backoff_factor: 10.0
+  non_finite_max_backoffs: 8
+
+cegis:
+  max_outer_iters: 10
+  init_n:
+    compare_2d: 512
+    parity_4d: 512
+    balance_paren_14: 2048
+  k_add:
+    compare_2d: 256
+    parity_4d: 256
+    balance_paren_14: 512
+  policy: hardest_margin
+
+specs:
+  enabled: []
+  compare_2d:
+    a_min: 0
+    a_max: 99
+    b_min: 0
+    b_max: 99
+  parity_4d:
+    n_min: 0
+    n_max: 9999
+  balance_paren_14:
+    max_len: 14
+  compare_6d_strat:
+    a_digits: 6
+    b_digits: 6
+    coverage:
+      per_msd_stratum_n: 10000
+      eq_n: 5000
+      near_n: 10000
+      ext_n: 5000
+      seed: 12345
+      near_deltas: [1, 2, 5, 10]
+      additional_random_n: 20000
+      local_perturb_k: 200
+
+data:
+  wordlists_dir: assets/wordlists
+  refbool_s_n: 20000
+  refbool_l_n: 1000
+  reftext_n: 5000
+
+evaluation:
+  bootstrap_resamples: 2000
+  bootstrap_seed: 0
+  generation:
+    max_new_tokens: 128
+    greedy: true
+    use_cache: true
+    apply_patch_only_on_prompt: true
+
+output:
+  out_dir: runs/
+  save_every_outer: true
+  write_certificate: true
+  write_report_html: true
+  figures_dir: paper/latex/figures
+  tables_dir: paper/latex/tables
+
+baselines:
+  enabled: ["base", "steering_vec_1l", "oneshot_full_mo", "oneshot_full_alm", "softprompt", "lora"]

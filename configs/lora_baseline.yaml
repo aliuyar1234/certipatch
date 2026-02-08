@@ -1,0 +1,11 @@
+run:
+  run_id: lora_baseline
+
+specs:
+  enabled: ["compare_2d"]
+
+baseline:
+  name: "LoRA"
+  lora_rank: 4
+  lora_target_modules: ["attn.c_proj|attention.dense"]
+  lora_layers: "candidate_layers"

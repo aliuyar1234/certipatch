@@ -1,0 +1,11 @@
+run:
+  run_id: oneshot_full_alm
+
+specs:
+  enabled: ["compare_2d"]
+
+baseline:
+  name: "OneShot-FullDomain-ALM"
+  train_on_full_domain: true
+  cegis_disabled: true
+  solver: "alm"

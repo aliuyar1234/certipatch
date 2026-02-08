@@ -1,0 +1,5 @@
+run:
+  run_id: compare6d_strat_certipatch
+
+specs:
+  enabled: ["compare_6d_strat"]

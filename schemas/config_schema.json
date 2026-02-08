@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": true,
+  "properties": {
+    "answer_tokens": {
+      "additionalProperties": true,
+      "properties": {
+        "fallback": {
+          "additionalProperties": true,
+          "properties": {
+            "no": {
+              "type": "string"
+            },
+            "yes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "yes",
+            "no"
+          ],
+          "type": "object"
+        },
+        "primary": {
+          "additionalProperties": true,
+          "properties": {
+            "no": {
+              "type": "string"
+            },
+            "yes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "yes",
+            "no"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "primary",
+        "fallback"
+      ],
+      "type": "object"
+    },
+    "hookpoints": {
+      "additionalProperties": true,
+      "properties": {
+        "apply_at": {
+          "type": "string"
+        },
+        "candidate_layers": {
+          "additionalProperties": true,
+          "properties": {
+            "explicit": {
+              "items": {
+                "type": "integer"
+              },
+              "type": [
+                "array",
+                "null"
+              ]
+            },
+            "mode": {
+              "enum": [
+                "quartiles",
+                "explicit"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "candidate_layers"
+      ],
+      "type": "object"
+    },
+    "model": {
+      "additionalProperties": true,
+      "properties": {
+        "backend": {
+          "enum": [
+            "transformer_lens",
+            "huggingface"
+          ],
+          "type": "string"
+        },
+        "model_path_or_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tokenizer_path_or_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "trust_remote_code": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "backend",
+        "model_path_or_id"
+      ],
+      "type": "object"
+    },
+    "patch": {
+      "additionalProperties": true,
+      "properties": {
+        "effective_layer_threshold": {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "family": {
+          "type": "string"
+        },
+        "rank_r": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "family",
+        "rank_r"
+      ],
+      "type": "object"
+    },
+    "run": {
+      "additionalProperties": true,
+      "properties": {
+        "deterministic": {
+          "type": "boolean"
+        },
+        "device": {
+          "type": "string"
+        },
+        "dtype": {
+          "type": "string"
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "seeds": {
+          "additionalProperties": true,
+          "properties": {
+            "master": {
+              "type": "integer"
+            },
+            "numpy": {
+              "type": "integer"
+            },
+            "torch": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "master",
+            "numpy",
+            "torch"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "run_id",
+        "device",
+        "dtype",
+        "seeds"
+      ],
+      "type": "object"
+    },
+    "specs": {
+      "additionalProperties": true,
+      "properties": {
+        "compare_6d_strat": {
+          "additionalProperties": true,
+          "properties": {
+            "coverage": {
+              "additionalProperties": true,
+              "properties": {
+                "eq_n": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "ext_n": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "near_n": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "per_msd_stratum_n": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "seed": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "per_msd_stratum_n",
+                "eq_n",
+                "near_n",
+                "ext_n",
+                "seed"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "enabled": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "run",
+    "model",
+    "answer_tokens",
+    "hookpoints",
+    "patch",
+    "specs"
+  ],
+  "title": "CertiPatch Config Schema v1",
+  "type": "object"
+}

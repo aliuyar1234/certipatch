@@ -1,0 +1,5 @@
+run:
+  run_id: compare2d_certipatch
+
+specs:
+  enabled: ["compare_2d"]
