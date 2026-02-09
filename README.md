@@ -11,6 +11,8 @@ CertiPatch is a reproducible research framework for **specification repair of fr
 
 **Author:** Ali Uyar (Independent Researcher)
 
+**Citation DOI (latest release archive):** [10.5281/zenodo.18541322](https://doi.org/10.5281/zenodo.18541322)
+
 This repository provides:
 - gated low-rank hookpoint patches (GLR-HP),
 - constrained optimization (augmented Lagrangian + CEGIS),
