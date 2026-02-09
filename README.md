@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](pyproject.toml)
-[![Paper PDF](https://img.shields.io/badge/Paper-PDF-red.svg)](https://raw.githubusercontent.com/aliuyar1234/certipatch/main/paper/latex/main.pdf)
+[![Paper PDF](https://img.shields.io/badge/Paper-PDF-red.svg)](https://github.com/aliuyar1234/certipatch/blob/main/paper/latex/main.pdf)
 [![Reproducibility](https://img.shields.io/badge/Reproducibility-Deterministic%20Pipeline-success.svg)](#reproducibility-contract)
 
 CertiPatch is a reproducible research framework for **specification repair of frozen language models** with a deterministic
