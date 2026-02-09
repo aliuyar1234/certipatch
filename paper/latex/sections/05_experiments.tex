@@ -8,6 +8,11 @@ CertiPatch reaches zero failures on all enumerable specs: COMPARE-2D ($0/10{,}00
 On COMPARE-6D-STRAT (coverage-bounded), certified pass rate is $86.22\%$ ($68{,}974/80{,}000$), with strongest strata on $S_{\text{eq}}$ and $S_{\text{ext}}$.
 This supports exact closure on enumerable domains and explicit bounded guarantees on the large-domain case.
 
+\paragraph{Collateral scope note (paper risk).}
+Collateral is not uniformly low in this reduced profile.
+Table~\ref{tab:main_runs} shows PARITY-4D as the clean case (KL$_S$ $=0.0017$, Drift$_L$ $=0.125$), while COMPARE-2D, BALANCE-PAREN-14, and COMPARE-6D-STRAT have materially larger collateral values.
+We therefore frame minimality as an optimization objective under constraints, not as a global cross-spec collateral bound.
+
 \paragraph{Baselines (scope-qualified).}
 For COMPARE-2D, only the base baseline cell completed; other baseline cells are explicitly marked not run in this scope and are excluded from comparative claims.
 For PARITY-4D, several methods close feasibility, while collateral differs materially.
