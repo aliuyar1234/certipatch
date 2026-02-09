@@ -1,4 +1,5 @@
 \section{Replayable empirical certificates}
+\label{sec:certificates}
 A certificate records what was evaluated and with which artifacts: model fingerprint, manifest hash, patch hash, certified scope definition (exact domain hash or coverage plan hash), counterexample budgets, and metrics.
 Certificates are scope-bounded and fail-closed: they must not claim satisfaction beyond their certified scope.
 A verifier recomputes hashes, regenerates datasets, re-evaluates metrics, and fails if any mismatch is detected.

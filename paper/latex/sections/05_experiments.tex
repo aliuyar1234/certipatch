@@ -1,67 +1,84 @@
 \section{Experiments}
-We evaluate three fully enumerable specs and one coverage-bounded spec, together with collateral suites that fire the gate.
-All numbers are from the reduced compute profile (single seed, main-model core runs, dev-model ablations).
-Comparative conclusions are restricted to completed baseline cells.
+\label{sec:experiments}
 
-\paragraph{Core outcomes.}
-CertiPatch reaches zero failures on all enumerable specs: COMPARE-2D ($0/10{,}000$), PARITY-4D ($0/10{,}000$), and BALANCE-PAREN-14 ($0/32{,}767$).
-On COMPARE-6D-STRAT (coverage-bounded), certified pass rate is $86.22\%$ ($68{,}974/80{,}000$), with strongest strata on $S_{\text{eq}}$ and $S_{\text{ext}}$.
-This supports exact closure on enumerable domains and explicit bounded guarantees on the large-domain case.
+\paragraph{Scope and evidence discipline.}
+All reported results come from the bundled run artifacts and are intentionally compute-aware: single seed (seed~0), a single main model (\texttt{EleutherAI/pythia-410m-deduped}), and a dev-model ablation block (\texttt{openai-community/gpt2}).
+Whenever a baseline cell is missing in the artifacts (e.g., multiple COMPARE-2D baselines), we explicitly treat it as \emph{not run (compute scope)} and do not draw comparative conclusions from it.
 
-\paragraph{Collateral scope note (paper risk).}
-Collateral is not uniformly low in this reduced profile.
-Table~\ref{tab:main_runs} shows PARITY-4D as the clean case (KL$_S$ $=0.0017$, Drift$_L$ $=0.125$), while COMPARE-2D, BALANCE-PAREN-14, and COMPARE-6D-STRAT have materially larger collateral values.
-We therefore frame minimality as an optimization objective under constraints, not as a global cross-spec collateral bound.
+\paragraph{Main outcomes across specs.}
+Table~\ref{tab:main_runs} summarizes the four core specifications.
+\Method closes all fully enumerable domains (COMPARE-2D, PARITY-4D, BALANCE-PAREN-14) with zero failures.
+On the large-domain setting COMPARE-6D-STRAT, the certificate is \emph{coverage-bounded}: we evaluate a fixed stratified plan of $80{,}000$ prompts and report a certified pass rate of $0.862$ (Section~\ref{sec:certificates}).
+Collateral metrics are reported for the gate-firing reference suites and vary materially by spec; in particular, PARITY-4D has low measured \KLS and moderate long-form drift, while COMPARE-2D and BALANCE-PAREN-14 exhibit higher measured drift under the same protocol.
 
-\paragraph{Baselines (scope-qualified).}
-For COMPARE-2D, only the base baseline cell completed; other baseline cells are explicitly marked not run in this scope and are excluded from comparative claims.
-For PARITY-4D, several methods close feasibility, while collateral differs materially.
-Within this reduced scope, CertiPatch's key differentiator is audited protocol behavior (certificate + fail-closed semantics) and compositionality under constraints.
+\input{tables/tab01_main_results}
 
-\begin{figure}[htbp]
+\paragraph{Baseline comparisons where available (PARITY-4D).}
+Table~\ref{tab:parity_baselines} compares \Method to completed baselines for PARITY-4D.
+Several budget-matched PEFT baselines (LoRA, SoftPrompt, OneShot-FullDomain-MO) also close the spec in this run set (zero failures), but incur substantially larger measured collateral on the same gate-firing suites.
+For example, \Method attains \KLS\ $=0.00168$ whereas LoRA reports \KLS\ $=0.01241$ and OneShot-FullDomain-MO reports \KLS\ $=0.11434$.
+Long-form drift is similarly heterogeneous: LoRA and SoftPrompt drift on essentially all RefBool-L prompts, whereas \Method drifts on a strict subset (\DriftL\ $=0.125$).
+
+\input{tables/tab03_parity_baselines}
+
+\paragraph{Baseline coverage gaps (COMPARE-2D).}
+For COMPARE-2D, only the Base baseline cell is present in the artifacts; other baseline cells are missing because the required reference-suite artifact was not produced in this reduced bundle.
+We therefore restrict COMPARE-2D discussion to (i) main-run outcomes and traces (Table~\ref{tab:main_runs}, Fig.~\ref{fig:cegis_trace}) and (ii) qualitative protocol properties (certificate semantics and compositionality).
+
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.98\linewidth]{figures/fig01_minimality_pareto.pdf}
-\caption{Collateral vs patch complexity on COMPARE-2D and PARITY-4D. Points are annotated by method; infeasible cells show failure counts.}
+\caption{Collateral vs patch complexity for COMPARE-2D and PARITY-4D (single seed). Points are annotated by method; infeasible cells show failure counts. Missing cells are treated as not run (compute scope) and do not appear.}
 \label{fig:minimality_pareto}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.94\linewidth]{figures/fig02_cegis_trace.pdf}
-\caption{CEGIS dynamics on COMPARE-2D: failures, collateral KL, and patch norm across outer iterations, with OneShot reference lines where available.}
+\caption{CEGIS dynamics on COMPARE-2D (single seed): spec failures, RefBool-S \KLS, and patch norm across outer iterations. This trace illustrates feasibility closure under counterexample-guided active-set growth; collateral behavior is reported, not assumed.}
 \label{fig:cegis_trace}
 \end{figure}
 
-\begin{figure}[htbp]
+\paragraph{Coverage-bounded certification (COMPARE-6D-STRAT).}
+Figure~\ref{fig:coverage_heatmap} reports failure rates across strata in the hashed coverage plan.
+The certificate shows strong performance on boundary-focused strata (e.g., \texttt{S\_ext} and \texttt{S\_eq}) and weaker performance in several interior strata, emphasizing why this run is framed as \emph{coverage-bounded} rather than a full-domain claim.
+A full strata table is provided in Appendix Table~\ref{tab:compare6d_strata}.
+
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.98\linewidth]{figures/fig03_coverage_heatmap.pdf}
-\caption{Coverage-bounded certification profile for COMPARE-6D-STRAT: certified failure rates per stratum (with stratum counts).}
+\caption{Coverage-bounded certification profile for COMPARE-6D-STRAT (single seed): certified failure rates per stratum (with stratum counts). The certificate claims only this coverage plan; out-of-coverage behavior is not certified.}
 \label{fig:coverage_heatmap}
 \end{figure}
 
 \paragraph{Compositionality.}
-The six-condition suite shows strong order effects.
-Naive additive composition ($A{+}B$) fails to transfer repair for spec $B$ (5003 failures), while sequential repair ($A\!\to\!B$ and $B\!\to\!A$) and joint repair recover zero failures on both specs.
-Patch interaction is therefore non-commutative and must be measured rather than assumed.
+We evaluate a six-condition compositionality suite using two specs: A (COMPARE-2D) and B (PARITY-4D).
+Figure~\ref{fig:compositionality} shows strong order effects.
+Naive additive composition (A$+$B) fails to transfer repair for spec~B (5{,}003 violations), while sequential repair (A$\to$B and B$\to$A) and joint repair recover zero failures on both specs.
+These results indicate that patch interaction is non-commutative and must be measured rather than assumed.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.94\linewidth]{figures/fig04_compositionality_matrix.pdf}
-\caption{Compositionality matrix over six conditions: per-spec failures, collateral metrics, and patch norm.}
+\caption{Compositionality matrix over six conditions (single seed): per-spec failures, collateral metrics, and patch norms. A$+$B denotes simultaneous application of the two independently learned patches; A$\to$B and B$\to$A denote sequential repair with feasibility constraints on both specs.}
 \label{fig:compositionality}
 \end{figure}
 
 \paragraph{Verifier binding checks.}
-We report tamper outcomes over replay-exact and four controlled artifact manipulations (patch weights, generator hash, coverage-plan hash, model revision).
-The checks are evaluated at artifact-binding level to remain stable under later repository edits outside the recorded run scope.
+Figure~\ref{fig:verifier_tamper} reports replay and tamper outcomes.
+The verifier is fail-closed: replay passes only when the recorded hashes and scope definitions match regenerated artifacts, and controlled mismatches (patch perturbation, generator hash mismatch, coverage-plan hash mismatch, model revision mismatch) are rejected.
 
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.98\linewidth]{figures/fig05_verifier_tamper.pdf}
-\caption{Artifact-binding tamper checks: replay exact passes; controlled tamper cases fail.}
+\caption{Artifact-binding tamper checks. Replay-exact evaluation passes; each controlled tamper condition fails, consistent with fail-closed verifier semantics.}
 \label{fig:verifier_tamper}
 \end{figure}
 
-\input{tables/tab01_main_results}
+\paragraph{Dev-model ablations (GPT-2).}
+Table~\ref{tab:ablations} reports targeted ablations on the dev model for COMPARE-2D.
+In this run set, constraining the patch to a single layer breaks feasibility closure, while several other ablations do not change the observed outcome.
+We therefore treat these ablations as \emph{diagnostic} evidence for what is necessary in the small setting and avoid generalizing them beyond the reduced scope.
+
 \input{tables/tab02_ablations}
 \FloatBarrier

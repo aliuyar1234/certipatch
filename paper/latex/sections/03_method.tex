@@ -1,26 +1,62 @@
 \section{Method}
-CertiPatch uses a gated low-rank hookpoint patch (GLR-HP) on the residual stream at the answer position.
-For candidate layers $\ell\in\mathcal{L}$:
-\[
-h_{\ell,p} \leftarrow h_{\ell,p} + s(x)\,U_\ell(V_\ell^\top h_{\ell,p}),
-\]
-with rank $r$ and candidate layers determined by configuration.
+\label{sec:method}
 
-\paragraph{Constrained minimality.}
-We optimize:
-\[
-\min_{\Delta\phi}\; \mathcal{L}_{\text{collateral}}(\Delta\phi) + \lambda_{\text{reg}}\mathcal{R}(\Delta\phi)
-\quad \text{s.t.}\quad g_{\text{spec}}(\Delta\phi)=0,
-\]
-where $g_{\text{spec}}$ encodes in-scope spec violations.
-The inner solver uses an augmented Lagrangian schedule.
-The outer loop is counterexample-guided and adds hardest violations to the active set each round.
-This CEGIS-style structure is used for closure under discovered failures while keeping the patch sparse and localized.
+\paragraph{Patch family (GLR-HP).}
+\Method applies an inference-time \emph{gated low-rank hookpoint patch} to a fixed set of candidate transformer layers.
+Let $p(x)$ be the answer position (the last non-padding token) and $s(x)\in\{0,1\}$ be the deterministic scope gate.
+At each candidate layer $\ell\in\mathcal{L}$, we patch the residual stream at the answer position:
+\begin{equation}
+ h_{\ell,p(x)} \leftarrow h_{\ell,p(x)} + s(x)\,U_\ell\big(V_\ell^\top h_{\ell,p(x)}\big),
+ \label{eq:glrhp}
+\end{equation}
+where $U_\ell, V_\ell\in\mathbb{R}^{d\times r}$ are trainable low-rank matrices (rank $r$ is configured).
+All base model weights remain frozen.
 
-\paragraph{Collateral objectives.}
-Collateral is measured on dedicated reference suites: short-form Yes/No KL and long-horizon generation drift.
-These suites are gate-aware: in-scope prompts are evaluated as such, and out-of-scope prompts remain excluded by construction.
-The resulting optimization target is explicitly ``repair under collateral budget'', not unconstrained task adaptation.
+\paragraph{Specs, margins, and constraint proxy.}
+Each spec provides a deterministic domain $X_{\text{spec}}$ and a computable labeler returning the correct answer token $t^*(x)\in\{\Yes,\No\}$.
+We score each prompt by a binary logit margin
+\begin{equation}
+ m_\phi(x) = \mathrm{logit}_{\phi}(t^*(x)\mid x) - \mathrm{logit}_{\phi}(t^{\neg *}(x)\mid x),
+\end{equation}
+where $t^{\neg *}(x)$ is the incorrect option.
+We require a configured margin threshold $\tau$.
+For a finite evaluation set $D$, define violations $v_i=\max(0, \tau - m_\phi(x_i))$.
+To obtain a differentiable constraint proxy, we use a smooth max operator recorded in each run artifact:
+\begin{equation}
+ g_{\text{smooth}}(\phi;D) = \frac{\log\Big(\frac{1}{|D|}\sum_{i=1}^{|D|} \exp(\beta v_i)\Big)}{\beta},
+ \label{eq:gsmooth}
+\end{equation}
+with temperature $\beta$ configured (\texttt{objective.beta\_smooth}).
+\emph{Feasibility} is evaluated in terms of discrete failures on the certified scope: zero failures on fully enumerable domains, or zero failures on the fixed coverage plan for coverage-bounded domains.
 
-\paragraph{Compositionality.}
-We train separate patches for two specs and evaluate interference under additive composition and sequential repair (A$\to$B and B$\to$A).
+\paragraph{Constrained minimality objective.}
+\Method frames repair as \emph{minimal collateral change under feasibility constraints}:
+\begin{equation}
+\min_{\phi}\; \mathcal{L}_{\text{col}}(\phi) + \mathcal{R}(\phi)
+\quad \text{s.t.}\quad \text{no in-scope violations on the certified evaluation set.}
+\label{eq:constrained}
+\end{equation}
+The collateral term $\mathcal{L}_{\text{col}}$ is the RefBool-S KL divergence at the answer position on gate-firing prompts, and $\mathcal{R}$ is a configured regularizer (L2 and group sparsity across layers).
+
+\paragraph{Augmented Lagrangian solver (inner loop).}
+We solve Eq.~\eqref{eq:constrained} using an augmented Lagrangian method over $g_{\text{smooth}}$:
+\begin{equation}
+\mathcal{L}_{\text{AL}}(\phi;\lambda,\mu) = \mathcal{L}_{\text{col}}(\phi) + \mathcal{R}(\phi)
++ \lambda\,g_{\text{smooth}}(\phi) + \frac{\mu}{2}\,g_{\text{smooth}}(\phi)^2.
+\end{equation}
+Within a run, the solver \emph{warm-starts} the ALM state $(\lambda,\mu)$ across repeated inner solves (recorded in the run artifacts), updating
+$\lambda \leftarrow \lambda + \mu g_{\text{smooth}}$ and scaling $\mu$ up on violation or down when feasible.
+TODO(citation): a standard reference for augmented Lagrangian methods would strengthen this description.
+
+\paragraph{Counterexample-guided repair (outer loop).}
+The outer loop performs counterexample-guided constraint generation (CEGIS-style).
+Starting from a deterministic initial sample $D^{(0)}\subset X_{\text{spec}}$, we repeat:
+(i) solve the inner ALM objective on the current active set $D^{(t)}$,
+(ii) search for counterexamples within the certified scope (exact sweep for enumerable domains; fixed coverage plan plus bounded additional search for coverage-bounded domains),
+and (iii) add the hardest counterexamples to form $D^{(t+1)}$.
+The loop terminates when no counterexamples are found within the certified scope and recorded budgets.
+TODO(citation): classic CEGIS references would strengthen this description.
+
+\paragraph{Collateral metrics.}
+In addition to the short-form KL on RefBool-S, we report a long-form drift metric RefBool-L (greedy decoding with a fixed budget), summarized by a divergence rate and first-difference index.
+These metrics are computed on gate-firing prompts by construction, aligning measurement with the certified intervention scope.

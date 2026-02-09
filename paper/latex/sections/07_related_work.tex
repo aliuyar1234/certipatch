@@ -1,14 +1,23 @@
 \section{Related work}
-\paragraph{Localized editing and PEFT.}
-Targeted model editing methods (e.g., ROME and MEMIT) show that narrow behavioral updates can be achieved without full retraining~\cite{meng2022rome,meng2023memit}.
-Parameter-efficient adaptation methods such as prompt tuning and LoRA similarly motivate small-parameter interventions~\cite{lester2021prompt,hu2022lora}.
-CertiPatch differs in objective: constrained in-scope closure with explicit collateral accounting and verifier replay.
+\label{sec:related}
+
+\paragraph{Model editing and localized updates.}
+A large body of work studies targeted changes to a pretrained model's behavior, including factual association editing (e.g., ROME~\cite{meng2022rome} and MEMIT~\cite{meng2023memit}).
+\Method shares the goal of localized behavior change, but differs in both objective and artifact semantics: we optimize a constraint-first \emph{repair} objective under explicit collateral measurement and we emit replayable certificates that specify scope and coverage.
+
+\paragraph{Parameter-efficient adaptation.}
+Parameter-efficient fine-tuning (PEFT) methods---including prompt tuning~\cite{lester2021prompt} and low-rank adaptation (LoRA)~\cite{hu2022lora}---motivate small-parameter interventions.
+In our reduced scope, we use these as budget-matched baselines where artifacts are available (PARITY-4D).
+
+\paragraph{Counterexample-guided refinement and repair loops.}
+Iterative refinement guided by discovered failures is a standard idea in adversarial testing (e.g., HotFlip~\cite{ebrahimi2018hotflip}) and in counterexample-guided synthesis and repair (e.g., syntax-guided synthesis~\cite{alur2013syntax}).
+\Method adopts a similar outer-loop structure but ties each run to a deterministic, auditable artifact bundle with fail-closed verification.
+TODO(citation): classic counterexample-guided inductive synthesis (CEGIS) and neural network repair papers would strengthen this positioning.
 
 \paragraph{Attribution and debugging signals.}
-Influence-based attribution methods aim to identify training examples that affect model behavior~\cite{koh2017influence,pruthi2020tracin,park2023trak}.
-While useful diagnostically, they do not by themselves provide scope-bounded repair certificates.
-Our work uses this line as context for why replayable artifact semantics are needed in practical repair workflows.
+Influence-style attribution methods aim to trace model behavior to training data or updates (e.g., influence functions~\cite{koh2017influence}, TracIn~\cite{pruthi2020tracin}, and TRAK~\cite{park2023trak}).
+These methods are diagnostic rather than certifying; our focus is on replayable scope-bounded outcomes and their verifier semantics.
 
-\paragraph{Failure discovery and repair loops.}
-Counterexample generation and iterative refinement are central ideas in adversarial testing and CEGIS-style program synthesis~\cite{ebrahimi2018hotflip,alur2013syntax}.
-CertiPatch adopts this iterative spirit for model repair, but anchors each run in deterministic artifacts and fail-closed verification.
+\paragraph{Collateral and behavioral evaluation.}
+Collateral change is often discussed informally in editing and steering, but is rarely reported as a first-class, scope-aligned metric alongside an auditable certificate.
+TODO(citation): behavioral testing and metamorphic testing frameworks for NLP would provide additional context.

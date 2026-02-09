@@ -10,19 +10,30 @@
 \usepackage{placeins}
 \usepackage[margin=1in]{geometry}
 
-\title{CertiPatch: Minimal-Collateral Specification Repair for Language Models via Counterexample-Guided Hookpoint Patches}
+% Bibliography: use biblatex+biber (bibtex is unavailable in the build environment).
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=99]{biblatex}
+\addbibresource{references.bib}
+
+% Light-weight macros for consistency.
+\newcommand{\Method}{\textsc{CertiPatch}}
+\newcommand{\KLS}{\ensuremath{\mathrm{KL}_{S}}}
+\newcommand{\DriftL}{\ensuremath{\mathrm{Drift}_{L}}}
+\newcommand{\Yes}{\texttt{Yes}}
+\newcommand{\No}{\texttt{No}}
+
+\title{CertiPatch: Specification Repair for Frozen Language Models with Replayable Empirical Certificates}
 \author{Anonymous Authors}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We study \emph{specification repair} for frozen language models: given a deterministic prompt family and computable Yes/No labels, we seek an inference-time patch that enforces the specification while minimizing collateral change.
-We present CertiPatch, a train-certify-verify protocol that learns a gated low-rank hookpoint patch under constrained optimization: minimize collateral drift subject to zero in-scope violations.
-CertiPatch combines a counterexample-guided outer loop with an augmented Lagrangian inner solver and emits replayable empirical certificates with fail-closed verification.
-In a compute-aware single-seed scope, CertiPatch reaches zero failures on three deterministic specs (COMPARE-2D, PARITY-4D, BALANCE-PAREN-14), achieves 86.22\% pass rate on coverage-bounded COMPARE-6D-STRAT, and exposes strong compositionality asymmetries (naive patch addition fails, while sequential and joint repair recover feasibility).
-Collateral outcomes in this run profile are spec-dependent: PARITY-4D remains low-drift, while COMPARE-2D, BALANCE-PAREN-14, and COMPARE-6D-STRAT show substantially larger collateral movement.
-The resulting claims are intentionally scope-bounded: we provide evidence for protocol semantics, compositional behavior, and verifier integrity, while restricting comparative baseline conclusions to completed cells and avoiding claims of a uniform collateral bound across specs.
+We study \emph{specification repair} for frozen language models: given a deterministic prompt family and a computable \Yes/\No labeler, learn an inference-time patch that enforces the specification \emph{within a certified scope} while explicitly measuring collateral change.
+We present \Method, a \emph{train--certify--verify} protocol that (i) learns a gated low-rank hookpoint patch under a constraint-first objective (minimize collateral subject to zero in-scope violations), and (ii) emits a \emph{replayable empirical certificate} with fail-closed verification semantics.
+In a reduced-compute, single-seed study on \texttt{EleutherAI/pythia-410m-deduped}, \Method attains zero failures on three fully enumerable specs (COMPARE-2D: $0/10{,}000$, PARITY-4D: $0/10{,}000$, BALANCE-PAREN-14: $0/32{,}767$) and achieves $86.22\%$ pass rate ($68{,}974/80{,}000$) on a large-domain, coverage-bounded specification (COMPARE-6D-STRAT).
+Where baseline cells are available (PARITY-4D), \Method closes the spec with substantially lower measured collateral (\KLS\ $=0.00168$) than completed budget-matched PEFT baselines.
+We further provide a six-condition compositionality study showing that naive additive patch composition fails (e.g., $5{,}003$ violations on spec~B), while sequential and joint repair recover feasibility.
+All claims are explicitly scope-qualified: single seed, reduced compute, and incomplete baseline coverage where artifacts are missing.
 \end{abstract}
 
 \input{sections/01_introduction}
@@ -34,8 +45,7 @@ The resulting claims are intentionally scope-bounded: we provide evidence for pr
 \input{sections/07_related_work}
 \input{sections/08_conclusion}
 
-\bibliographystyle{plain}
-\bibliography{references}
+\printbibliography
 
 \appendix
 \input{sections/A1_certificate_schema}
