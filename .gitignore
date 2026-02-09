@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+.ipynb_checkpoints/
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -23,12 +25,23 @@ artifacts/
 assets/
 exports/
 session_logs/
+coverage/
+.coverage
+htmlcov/
 
 # Large bundles and archives
 *.zip
 *.7z
 *.tar
 *.gz
+
+# Local/private environment files
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
 
 # LaTeX intermediate files
 paper/latex/*.aux
@@ -42,6 +55,12 @@ paper/latex/*.out
 paper/latex/*.run.xml
 paper/latex/*.synctex.gz
 paper/latex/*.toc
+paper/latex/_pdf_audit/
+
+# Local review notes (kept out of public repo by default)
+paper/latex/CHANGELOG.md
+paper/latex/CLAIM_AUDIT.md
+paper/latex/MISSING_DATA_OR_LIMITATIONS.md
 
 # Keep final paper assets under version control
 !paper/latex/main.pdf
