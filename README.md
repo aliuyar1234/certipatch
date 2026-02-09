@@ -2,23 +2,25 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](pyproject.toml)
-[![Status](https://img.shields.io/badge/Status-Research%20Prototype-orange.svg)](#)
+[![Paper PDF](https://img.shields.io/badge/Paper-PDF-red.svg)](https://raw.githubusercontent.com/aliuyar1234/certipatch/main/paper/latex/main.pdf)
 [![Reproducibility](https://img.shields.io/badge/Reproducibility-Deterministic%20Pipeline-success.svg)](#reproducibility-contract)
 
-CertiPatch is a research codebase for **specification repair of frozen language models** with a deterministic
-`train -> certify -> verify` workflow.
+CertiPatch is a reproducible research framework for **specification repair of frozen language models** with a deterministic
+`train -> certify -> verify` pipeline.
 
-It combines:
+**Author:** Ali Uyar (Independent Researcher)
+
+This repository provides:
 - gated low-rank hookpoint patches (GLR-HP),
 - constrained optimization (augmented Lagrangian + CEGIS),
-- replayable empirical certificates with fail-closed verification,
-- paper-ready artifact generation (figures/tables + LaTeX).
+- replayable empirical certificates with fail-closed verification semantics,
+- end-to-end generation of paper artifacts (figures, tables, and LaTeX).
 
 ## Why CertiPatch
 - Deterministic spec/domain generators for reproducible evaluation.
-- Constraint-first repair objective: close spec failures while measuring collateral drift.
+- Constraint-first repair objective: satisfy in-scope spec constraints while quantifying collateral drift.
 - Artifact-locked certificates with explicit scope and coverage semantics.
-- End-to-end pipeline from training to verification to manuscript assets.
+- End-to-end workflow from training through verification to publication assets.
 
 ## Repository layout
 - `certipatch/`: library code (`specs/`, `models/`, `cegis/`, `eval/`, `artifacts/`)
@@ -46,6 +48,14 @@ Run the paper profile:
 python scripts/reproduce_paper.py --config configs/paper_full.yaml --tier full
 ```
 
+## Results and paper
+- Download paper PDF: `paper/latex/main.pdf`
+- Build paper locally:
+```bash
+cd paper/latex
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+```
+
 ## Reproducibility contract
 The reproduction workflow is fail-closed. A valid run must:
 - validate config against `schemas/config_schema.json`,
@@ -63,19 +73,5 @@ python -m mypy certipatch
 python scripts/update_manifest_sha256.py
 ```
 
-## Documentation map (SSOT order)
-When documents conflict, use this precedence:
-1. `SPEC.md`
-2. `DECISIONS.md`
-3. `ALGORITHMS.md`
-4. `EXPERIMENTS.md`
-5. `FIGURES_TABLES.md`
-
-Supporting references:
-- `REPRODUCE.md`: expected outputs and fail-closed checks
-- `CLAIMS_TO_EVIDENCE.md`: claim-to-artifact mapping
-- `00_SSOT.md`: index/quick navigation
-
-## Author
-**Ali Uyar**  
-Independent Researcher
+## Reproduction reference
+See `REPRODUCE.md` for expected outputs and validation behavior.
