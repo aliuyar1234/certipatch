@@ -13,6 +13,11 @@ CertiPatch is a reproducible research framework for **specification repair of fr
 
 **Citation DOI (latest release archive):** [10.5281/zenodo.18541322](https://doi.org/10.5281/zenodo.18541322)
 
+## Description
+This project studies reliable post-hoc repair of model behavior under explicit, machine-checkable constraints.
+CertiPatch learns localized inference-time patches, certifies behavior over declared evaluation scope, and verifies artifact
+integrity via replayable certificates with fail-closed semantics.
+
 This repository provides:
 - gated low-rank hookpoint patches (GLR-HP),
 - constrained optimization (augmented Lagrangian + CEGIS),
