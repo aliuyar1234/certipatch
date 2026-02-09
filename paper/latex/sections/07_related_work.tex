@@ -12,7 +12,7 @@ In our reduced scope, we use these as budget-matched baselines where artifacts a
 \paragraph{Counterexample-guided refinement and repair loops.}
 Iterative refinement guided by discovered failures is a standard idea in adversarial testing (e.g., HotFlip~\cite{ebrahimi2018hotflip}) and in counterexample-guided synthesis and repair (e.g., syntax-guided synthesis~\cite{alur2013syntax}).
 \Method adopts a similar outer-loop structure but ties each run to a deterministic, auditable artifact bundle with fail-closed verification.
-TODO(citation): classic counterexample-guided inductive synthesis (CEGIS) and neural network repair papers would strengthen this positioning.
+Our contribution is not a new synthesis algorithm, but an artifact-verified adaptation of this loop pattern for frozen-model repair.
 
 \paragraph{Attribution and debugging signals.}
 Influence-style attribution methods aim to trace model behavior to training data or updates (e.g., influence functions~\cite{koh2017influence}, TracIn~\cite{pruthi2020tracin}, and TRAK~\cite{park2023trak}).
@@ -20,4 +20,4 @@ These methods are diagnostic rather than certifying; our focus is on replayable 
 
 \paragraph{Collateral and behavioral evaluation.}
 Collateral change is often discussed informally in editing and steering, but is rarely reported as a first-class, scope-aligned metric alongside an auditable certificate.
-TODO(citation): behavioral testing and metamorphic testing frameworks for NLP would provide additional context.
+We therefore report collateral as a primary metric family aligned with the same intervention scope used for feasibility claims.

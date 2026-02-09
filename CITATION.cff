@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+title: "CertiPatch: Specification Repair for Frozen Language Models with Replayable Empirical Certificates"
+message: "If you use this software, please cite it using the metadata below."
+type: software
+authors:
+  - family-names: Uyar
+    given-names: Ali
+    affiliation: Independent Researcher
+version: 0.1.0
+doi: 10.5281/zenodo.18541322
+url: https://github.com/aliuyar1234/certipatch
+repository-code: https://github.com/aliuyar1234/certipatch
+license: MIT

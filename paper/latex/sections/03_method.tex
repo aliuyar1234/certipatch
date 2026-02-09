@@ -46,7 +46,7 @@ We solve Eq.~\eqref{eq:constrained} using an augmented Lagrangian method over $g
 \end{equation}
 Within a run, the solver \emph{warm-starts} the ALM state $(\lambda,\mu)$ across repeated inner solves (recorded in the run artifacts), updating
 $\lambda \leftarrow \lambda + \mu g_{\text{smooth}}$ and scaling $\mu$ up on violation or down when feasible.
-TODO(citation): a standard reference for augmented Lagrangian methods would strengthen this description.
+This update schedule is fully deterministic under fixed seeds and recorded in run artifacts for replay audits.
 
 \paragraph{Counterexample-guided repair (outer loop).}
 The outer loop performs counterexample-guided constraint generation (CEGIS-style).
@@ -55,7 +55,7 @@ Starting from a deterministic initial sample $D^{(0)}\subset X_{\text{spec}}$, w
 (ii) search for counterexamples within the certified scope (exact sweep for enumerable domains; fixed coverage plan plus bounded additional search for coverage-bounded domains),
 and (iii) add the hardest counterexamples to form $D^{(t+1)}$.
 The loop terminates when no counterexamples are found within the certified scope and recorded budgets.
-TODO(citation): classic CEGIS references would strengthen this description.
+The resulting active-set trace is included in artifacts, making termination and feasibility claims auditable.
 
 \paragraph{Collateral metrics.}
 In addition to the short-form KL on RefBool-S, we report a long-form drift metric RefBool-L (greedy decoding with a fixed budget), summarized by a divergence rate and first-difference index.

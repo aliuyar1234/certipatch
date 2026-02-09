@@ -1,4 +1,4 @@
-# REPRODUCE.md — One Command, Expected Outputs (Normative)
+# REPRODUCE.md - One Command, Expected Outputs (Normative)
 
 This repository is designed for one-command reproduction.
 
