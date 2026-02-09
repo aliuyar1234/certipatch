@@ -9,7 +9,7 @@ description = "CertiPatch SSOT scaffold: minimal-collateral specification repair
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-authors = [{name = "Anonymous"}]
+authors = [{name = "Ali Uyar"}]
 
 dependencies = [
   "pyyaml>=6.0",
