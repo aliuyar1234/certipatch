@@ -2,6 +2,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](pyproject.toml)
+[![DOI](https://zenodo.org/badge/1153117963.svg)](https://doi.org/10.5281/zenodo.18541322)
 [![Paper PDF](https://img.shields.io/badge/Paper-PDF-red.svg)](https://github.com/aliuyar1234/certipatch/blob/main/paper/latex/main.pdf)
 [![Reproducibility](https://img.shields.io/badge/Reproducibility-Deterministic%20Pipeline-success.svg)](#reproducibility-contract)
 
